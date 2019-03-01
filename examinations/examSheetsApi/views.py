@@ -67,6 +67,17 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     queryset = ExamSheet.objects.all()
     serializer_class = ExamSheetSerializer
 
+    @action(detail=True)
+    def publish(self, request, **kwargs):
+        exam = self.get_object()
+        exam.is_published = True
+        exam.save()
+        
+        serializer = ExamSheetSerializer(exam, many=False)
+        return Response(serializer.data)
+
+
+
 class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
