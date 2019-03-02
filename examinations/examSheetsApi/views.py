@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.http.response import HttpResponseNotAllowed
 
 from examinations.examSheetsApi.serializers import (
     UserSerializer, GroupSerializer,
@@ -42,7 +43,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
-    '''def get_queryset(self):
+    def get_queryset(self):
         questions = Question.objects.all()
         return questions
 
@@ -64,10 +65,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
         serializer = QuestionMini(instance)
         return Response(serializer.data)
 
-    @action(detail=True)
-    def publish(self, request, **kwargs):
-        pass
-    '''
+
+
+
+
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
@@ -104,5 +105,51 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
 
 
 class MyOwnModelViewSet(viewsets.ModelViewSet):
-    queryset = MyOwnModel.objects.all()
+    #queryset = MyOwnModel.objects.all()
     serializer_class = MyOwnModelSerializer
+
+    def get_queryset(self):
+        # in this place i can choose queryset
+        #qs = MyOwnModel.objects.filter(id=2)
+        qs = MyOwnModel.objects.all()
+        return qs
+    queryset = get_queryset(MyOwnModel)
+
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        serializer = MyOwnModelSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = MyOwnModelSerializer(instance)
+        return Response(serializer.data)
+
+
+    def create(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            my_model = MyOwnModel.objects.create(q=request.data["q"], a=request.data["a"])
+            serializer = MyOwnModelSerializer(my_model, many=False)
+            return Response(serializer.data)
+        else:
+            return HttpResponseNotAllowed('Not allowed')
+
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        instance.q = request.data['q']
+        instance.a = request.data['a']
+        instance.save()
+
+        serializer = MyOwnModelSerializer(instance, many=False)
+        return Response(serializer.data)
+
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response('Record deleted')

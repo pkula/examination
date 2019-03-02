@@ -24,21 +24,21 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'question_content', 'sheet_id', 'max_mark')
+        fields = ('id', 'question_content', 'sheet_id', 'max_score')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
     #question = QuestionSerializer(many=False)
     class Meta:
         model = Answer
-        fields = ('id', 'answer_content', 'mark', 'question_id', 'form_id')
+        fields = ('id', 'answer_content', 'score', 'question_id', 'form_id')
 
 
 
 class AnswerFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerForm
-        fields = ('id', 'exam_sheet_id', 'answers')
+        fields = ('id', 'exam_sheet_id', 'answers', 'mark')
 
 
 class ExamSheetSerializer(serializers.ModelSerializer):
@@ -46,7 +46,7 @@ class ExamSheetSerializer(serializers.ModelSerializer):
     answer_forms = AnswerFormSerializer(many=True)
     class Meta:
         model = ExamSheet
-        fields = ('id', 'is_published', 'questions', 'answer_forms')
+        fields = ('id', 'title', 'is_published', 'questions', 'answer_forms')
         #depth = 1
 
 
