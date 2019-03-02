@@ -19,7 +19,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'question')
+        fields = ('question',)
 
 
 class QuestionMini(serializers.ModelSerializer):
@@ -29,26 +29,26 @@ class QuestionMini(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
 class AnswerSerializer(serializers.ModelSerializer):
-    question = QuestionSerializer(many=False)
+    #question = QuestionSerializer(many=False)
     class Meta:
         model = Answer
-        fields = ('id', 'mark', 'question')
+        fields = ('id', 'mark',)
 
 
 
 class AnswerFormSerializer(serializers.ModelSerializer):
-    answers = AnswerSerializer(many=True)
+    #answers = AnswerSerializer(many=True)
     class Meta:
         model = AnswerForm
-        fields = ('id', 'answers')
+        fields = ('id', )
 
 
 class ExamSheetSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    answer_forms = AnswerFormSerializer(many=True)
+    #questions = QuestionSerializer(many=True)
+    #answer_forms = AnswerFormSerializer(many=True)
     class Meta:
         model = ExamSheet
-        fields = ('id', 'answer_forms', 'questions')
+        fields = ('id',)
         #depth = 1
 
 
@@ -58,6 +58,6 @@ class MyOwnModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyOwnModel
-        fields = ('id', 'q')
-        #read_only_fields = ('id',)
+        fields = ('id', 'q','a')
+        #read_only_fields = ('a',)
         #depth = 1
