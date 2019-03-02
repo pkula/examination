@@ -4,7 +4,9 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from examinations.examSheetsApi.serializers import UserSerializer, GroupSerializer
+from examinations.examSheetsApi.serializers import (
+    UserSerializer, GroupSerializer,
+)
 from .models import (
     Question, Answer,
     ExamSheet, AnswerForm,
@@ -12,7 +14,6 @@ from .models import (
 )
 from .serializers import (
     QuestionSerializer,
-    QuestionMini,
     AnswerSerializer,
     AnswerFormSerializer,
     ExamSheetSerializer,

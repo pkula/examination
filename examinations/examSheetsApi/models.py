@@ -8,23 +8,22 @@ class ExamSheet(models.Model):
 
 
 
-
 class AnswerForm(models.Model):
-    exam_sheet = models.ForeignKey(ExamSheet, on_delete=models.CASCADE, related_name='answer_forms', default=1)
+    exam_sheet_id = models.ForeignKey(ExamSheet, on_delete=models.CASCADE, related_name='answer_forms')
     #total_mark   - its not a field there is a function
 
 class Question(models.Model):
-    question = models.TextField(max_length=100, null=True, blank=True)
+    question_content = models.TextField(max_length=100, null=True, blank=True)
     max_mark = models.IntegerField(blank=True, null=True)
-    #sheet = models.ForeignKey(ExamSheet, on_delete=models.CASCADE, related_name='questions', blank=True, null=True, default=1)
+    sheet_id = models.ForeignKey(ExamSheet, on_delete=models.CASCADE, related_name='questions',  default=1)
 
 
 
 class Answer(models.Model):
-    answer = models.TextField(max_length=110)
+    answer_content = models.TextField(max_length=110)
     mark = models.IntegerField(blank=True, null=True) #superuser mark this field
-    #question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True, default=1)
-    #form = models.ForeignKey(AnswerForm, on_delete=models.CASCADE, related_name='answers', default=1)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True,)
+    form_id = models.ForeignKey(AnswerForm, on_delete=models.CASCADE, related_name='answers')
 
 
 class MyOwnModel(models.Model):

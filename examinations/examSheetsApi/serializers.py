@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Question, Answer, AnswerForm, ExamSheet, MyOwnModel
+from .models import (
+    Question, Answer, AnswerForm,
+    ExamSheet, MyOwnModel,
+)
 
 
 
@@ -16,42 +19,35 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('question',)
+        fields = ('id', 'question_content', 'sheet_id', 'max_mark')
 
-
-class QuestionMini(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = ('id', 'question')
-        read_only_fields = ('id',)
 
 class AnswerSerializer(serializers.ModelSerializer):
     #question = QuestionSerializer(many=False)
     class Meta:
         model = Answer
-        fields = ('id', 'mark',)
+        fields = ('id', 'answer_content', 'mark', 'question_id', 'form_id')
 
 
 
 class AnswerFormSerializer(serializers.ModelSerializer):
-    #answers = AnswerSerializer(many=True)
     class Meta:
         model = AnswerForm
-        fields = ('id', )
+        fields = ('id', 'exam_sheet_id', 'answers')
 
 
 class ExamSheetSerializer(serializers.ModelSerializer):
-    #questions = QuestionSerializer(many=True)
-    #answer_forms = AnswerFormSerializer(many=True)
+    questions = QuestionSerializer(many=True)
+    answer_forms = AnswerFormSerializer(many=True)
     class Meta:
         model = ExamSheet
-        fields = ('id',)
+        fields = ('id', 'is_published', 'questions', 'answer_forms')
         #depth = 1
-
-
 
 
 class MyOwnModelSerializer(serializers.ModelSerializer):
