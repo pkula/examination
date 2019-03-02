@@ -17,16 +17,18 @@ class AnswerForm(models.Model):
     #total_mark   - its not a field there is a function
 
 class Question(models.Model):
-    question = models.TextField(max_length=100)
+    question = models.TextField(max_length=100, null=True, blank=True)
     max_mark = models.IntegerField(blank=True, null=True)
-    sheet = models.ForeignKey(ExamSheet, on_delete=models.CASCADE, related_name='questions')
+    sheet = models.ForeignKey(ExamSheet, on_delete=models.CASCADE, related_name='questions', blank=True, null=True)
 
 
 
 class Answer(models.Model):
     answer = models.TextField(max_length=110)
     mark = models.IntegerField(blank=True, null=True) #superuser mark this field
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True, null=True)
     form = models.ForeignKey(AnswerForm, on_delete=models.CASCADE, related_name='answers')
 
 
+class MyOwnModel(models.Model):
+    q = models.TextField(max_length=110)

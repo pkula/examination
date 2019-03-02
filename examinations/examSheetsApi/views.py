@@ -1,13 +1,25 @@
 from django.shortcuts import render
-
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from examinations.examSheetsApi.serializers import UserSerializer, GroupSerializer
-from .models import Question, Answer, ExamSheet, AnswerForm
-from .serializers import QuestionSerializer, QuestionMini, AnswerSerializer, AnswerFormSerializer, ExamSheetSerializer
+from .models import (
+    Question, Answer,
+    ExamSheet, AnswerForm,
+    MyOwnModel,
+)
+from .serializers import (
+    QuestionSerializer,
+    QuestionMini,
+    AnswerSerializer,
+    AnswerFormSerializer,
+    ExamSheetSerializer,
+    MyOwnModelSerializer,
+)
+
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -29,7 +41,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
-    def get_queryset(self):
+    '''def get_queryset(self):
         questions = Question.objects.all()
         return questions
 
@@ -54,14 +66,12 @@ class QuestionViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def publish(self, request, **kwargs):
         pass
-
-
-
-
+    '''
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+
 
 class ExamSheetViewSet(viewsets.ModelViewSet):
     queryset = ExamSheet.objects.all()
@@ -85,6 +95,13 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         serializer = ExamSheetSerializer(exam, many=False)
         return Response(serializer.data)
 
+
 class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
+
+
+
+class MyOwnModelViewSet(viewsets.ModelViewSet):
+    queryset = MyOwnModel.objects.all()
+    serializer_class = MyOwnModelSerializer
