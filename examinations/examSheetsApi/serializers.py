@@ -30,23 +30,25 @@ class QuestionMini(serializers.ModelSerializer):
 
 
 
-
-
-
-
-
-
 class AnswerSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer(many=False)
     class Meta:
         model = Answer
-        fields = ('id', )
-
-class ExamSheetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ExamSheet
-        fields = ('id', )
+        fields = ('id', 'mark', 'question')
 
 class AnswerFormSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
     class Meta:
         model = AnswerForm
-        fields = ('id', )
+        fields = ('id', 'answers')
+
+
+
+
+class ExamSheetSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    answer_forms = AnswerFormSerializer(many=True)
+    class Meta:
+        model = ExamSheet
+        fields = ('id', 'answer_forms', 'questions')
+

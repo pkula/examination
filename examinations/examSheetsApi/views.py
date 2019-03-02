@@ -72,11 +72,18 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         exam = self.get_object()
         exam.is_published = True
         exam.save()
-        
+
         serializer = ExamSheetSerializer(exam, many=False)
         return Response(serializer.data)
 
+    @action(detail=True)
+    def unpublish(self, request, **kwargs):
+        exam = self.get_object()
+        exam.is_published = False
+        exam.save()
 
+        serializer = ExamSheetSerializer(exam, many=False)
+        return Response(serializer.data)
 
 class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()

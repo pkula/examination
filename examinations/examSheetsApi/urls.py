@@ -6,9 +6,9 @@ router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'questions', views.QuestionViewSet)
-router.register(r'answers', views.QuestionViewSet)
-router.register(r'exam_sheets', views.QuestionViewSet)
-router.register(r'answer_form', views.QuestionViewSet)
+router.register(r'answers', views.AnswerViewSet)
+router.register(r'exam_sheets', views.ExamSheetViewSet)
+router.register(r'answer_forms', views.AnswerFormViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
