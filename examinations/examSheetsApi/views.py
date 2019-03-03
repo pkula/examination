@@ -3,6 +3,11 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from django.http.response import HttpResponseNotAllowed
 
 from examinations.examSheetsApi.serializers import (
@@ -19,8 +24,9 @@ from .serializers import (
     AnswerFormSerializer,
     ExamSheetSerializer,
     MyOwnModelSerializer,
+    UserSerializer
 )
-
+from django.contrib.auth.models import User
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -101,12 +107,14 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
 class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
-
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
 class MyOwnModelViewSet(viewsets.ModelViewSet):
     #queryset = MyOwnModel.objects.all()
     serializer_class = MyOwnModelSerializer
+    authentication_classes = (TokenAuthentication, )
 
     def get_queryset(self):
         # in this place i can choose queryset
@@ -129,16 +137,16 @@ class MyOwnModelViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-    def create(self, request, *args, **kwargs):
+    '''def create(self, request, *args, **kwargs):
         if request.user.is_staff:
             my_model = MyOwnModel.objects.create(q=request.data["q"], a=request.data["a"])
             serializer = MyOwnModelSerializer(my_model, many=False)
             return Response(serializer.data)
         else:
             return HttpResponseNotAllowed('Not allowed')
+    '''
 
-
-    def update(self, request, *args, **kwargs):
+    '''def update(self, request, *args, **kwargs):
         instance = self.get_object()
 
         instance.q = request.data['q']
@@ -146,8 +154,20 @@ class MyOwnModelViewSet(viewsets.ModelViewSet):
         instance.save()
 
         serializer = MyOwnModelSerializer(instance, many=False)
-        return Response(serializer.data)
+        return Response(serializer.data)'''
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if  instance.user == request.user:
+            instance.q = request.data['q']
+            instance.a = request.data['a']
+            instance.save()
+
+            serializer = MyOwnModelSerializer(instance, many=False)
+            return Response(serializer.data)
+        else:
+            return HttpResponseNotAllowed('Not allowed')
+            #return Response(ono)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

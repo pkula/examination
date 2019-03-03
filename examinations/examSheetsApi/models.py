@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 
 class ExamSheet(models.Model):
@@ -31,3 +31,4 @@ class Answer(models.Model):
 class MyOwnModel(models.Model):
     q = models.TextField(max_length=110)
     a = models.TextField(max_length=110)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

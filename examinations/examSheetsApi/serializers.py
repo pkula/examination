@@ -54,6 +54,6 @@ class MyOwnModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyOwnModel
-        fields = ('id', 'q','a')
+        fields = ('id', 'q','a','user')
         #read_only_fields = ('a',)
         #depth = 1
