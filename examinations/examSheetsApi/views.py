@@ -60,51 +60,17 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return questions
 
 
-    '''def create(self, request, *args, **kwargs):
-        question = MyOwnModel.objects.create(
-            #question_content=request.data["question_content"],
-            max_score=request.data["max_score"],
-            #sheet_id=request.data["sheet_id"],
-            #owner=request.user.id,
-            #question_content="gsdaghsdghgds",
-            #max_score=1,
-            sheet_id=1,
-            owner=1,)
-        serializer = QuestionSerializer(my_model, many=False)
-        return Response(serializer.data)
-    '''
 
 
 
     def create(self, request, *args, **kwargs):
-        my_dict = request.data
-        my_dict = dict(my_dict)
-        my_dict['owner'] = request.user.pk
-
-        for key in my_dict:
-            if key == 'question_content':
-                my_dict[key] = my_dict[key][0]
-            if key == 'max_score':
-                try:
-                    my_dict[key] = int(my_dict[key][0])
-                except:
-                    my_dict[key] = my_dict[key][0]
-            if key == 'sheet_id':
-                try:
-                    my_dict[key] = int(my_dict[key][0])
-                except:
-                    my_dict[key] = my_dict[key][0]
-
-
-        serializer = self.get_serializer(data=my_dict, )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-
-
-
+            form = Question.objects.create(
+                sheet_id=ExamSheet.objects.get(id=int(request.data['sheet_id'])),
+                question_content=request.data['question_content'],
+                max_score=request.data['max_score'],
+                        owner=request.user)
+            serializer = QuestionSerializer(form, many=False)
+            return Response(serializer.data)
 
 
 
@@ -145,10 +111,34 @@ class AnswerViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+    def create(self, request, *args, **kwargs):
+            form = Answer.objects.create(
+                question_id=Question.objects.get(id=int(request.data['question_id'])),
+                form_id=AnswerForm.objects.get(id=int(request.data['form_id'])),
+                answer_content=request.data['answer_content'],
+                        user=request.user)
+            serializer = AnswerSerializer(form, many=False)
+            return Response(serializer.data)
+
+
+
+
+
 class ExamSheetViewSet(viewsets.ModelViewSet):
     queryset = ExamSheet.objects.all()
     serializer_class = ExamSheetSerializer
     authentication_classes = (TokenAuthentication,)
+
+
+
+    def create(self, request, *args, **kwargs):
+            exam = ExamSheet.objects.create(
+                is_published=False,
+                title=request.data['title'],
+                        owner=request.user)
+            serializer = ExamSheetSerializer(exam, many=False)
+            return Response(serializer.data)
+
 
     @action(detail=True)
     def publish(self, request, **kwargs):
@@ -194,6 +184,14 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+    def create(self, request, *args, **kwargs):
+            form = AnswerForm.objects.create(exam_sheet_id=ExamSheet.objects.get(id=int(request.data['exam_sheet_id'])),
+                        user=request.user)
+            serializer = AnswerFormSerializer(form, many=False)
+            return Response(serializer.data)
+
+
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = AnswerFormSerializer(instance)
@@ -226,14 +224,14 @@ class MyOwnModelViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-    '''def create(self, request, *args, **kwargs):
-        if request.user.is_staff:
-            my_model = MyOwnModel.objects.create(q=request.data["q"], a=request.data["a"])
+
+    def create(self, request, *args, **kwargs):
+            my_model = MyOwnModel.objects.create(q=request.data["q"],
+                        a=request.data["a"], user=request.user)
             serializer = MyOwnModelSerializer(my_model, many=False)
             return Response(serializer.data)
-        else:
-            return HttpResponseNotAllowed('Not allowed')
-    '''
+
+
 
     '''def update(self, request, *args, **kwargs):
         instance = self.get_object()

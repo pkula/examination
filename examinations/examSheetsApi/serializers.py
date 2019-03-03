@@ -24,11 +24,10 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'question_content', 'sheet_id', 'max_score', 'owner')
+        fields = ('id', 'sheet_id', 'max_score', 'owner', 'question_content')
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-    #question = QuestionSerializer(many=False)
     class Meta:
         model = Answer
         fields = ('id', 'answer_content', 'score', 'question_id', 'form_id')
@@ -46,14 +45,15 @@ class ExamSheetSerializer(serializers.ModelSerializer):
     answer_forms = AnswerFormSerializer(many=True)
     class Meta:
         model = ExamSheet
-        fields = ('id', 'title', 'is_published', 'questions', 'answer_forms')
-        #depth = 1
+        fields = ('id', 'title', 'owner', 'is_published', 'questions', 'answer_forms'
+                   )
+
 
 
 class MyOwnModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyOwnModel
-        fields = ('id', 'q','a','user')
+        fields = ('id', 'q','a', 'user')
         #read_only_fields = ('a',)
         #depth = 1
