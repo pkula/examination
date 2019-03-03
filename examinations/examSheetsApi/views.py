@@ -60,6 +60,16 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return questions
 
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        instance.max_score = request.data['max_score']
+        instance.question_content = request.data['question_content']
+        instance.save()
+
+        serializer = QuestionSerializer(instance, many=False)
+        return Response(serializer.data)
+
 
 
 
@@ -98,6 +108,14 @@ class AnswerViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
 
 
+    def update(self, request, *args, **kwargs):
+        return Response("You can't change youre answer")
+
+
+
+
+
+
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
 
@@ -128,6 +146,16 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     queryset = ExamSheet.objects.all()
     serializer_class = ExamSheetSerializer
     authentication_classes = (TokenAuthentication,)
+
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        instance.title = request.data['title']
+        instance.save()
+
+        serializer = ExamSheetSerializer(instance, many=False)
+        return Response(serializer.data)
 
 
 
@@ -176,6 +204,14 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
     authentication_classes = (TokenAuthentication, )
+
+
+
+    def update(self, request, *args, **kwargs):
+        return Response("You can't update your answer")
+
+
+
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
