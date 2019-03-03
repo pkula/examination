@@ -4,10 +4,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import (
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
+
 from django.http.response import HttpResponseNotAllowed
 
 from examinations.examSheetsApi.serializers import (
@@ -16,17 +13,13 @@ from examinations.examSheetsApi.serializers import (
 from .models import (
     Question, Answer,
     ExamSheet, AnswerForm,
-    MyOwnModel,
 )
 from .serializers import (
     QuestionSerializer,
     AnswerSerializer,
     AnswerFormSerializer,
     ExamSheetSerializer,
-    MyOwnModelSerializer,
-    UserSerializer
 )
-from django.contrib.auth.models import User
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -45,7 +38,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
-
+def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    instance.delete()
+    return Response('Record deleted')
 
 
 
@@ -88,11 +84,11 @@ class QuestionViewSet(viewsets.ModelViewSet):
         serializer = QuestionSerializer(instance, many=False)
         return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
+    '''def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.delete()
         return Response('Record deleted')
-
+    '''
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
@@ -221,20 +217,10 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
 
 
 
+######################################################################################################################
 
 
-
-
-
-
-
-
-
-
-
-
-
-class MyOwnModelViewSet(viewsets.ModelViewSet):
+'''class MyOwnModelViewSet(viewsets.ModelViewSet):
     #queryset = MyOwnModel.objects.all()
     serializer_class = MyOwnModelSerializer
     authentication_classes = (TokenAuthentication, )
@@ -244,75 +230,13 @@ class MyOwnModelViewSet(viewsets.ModelViewSet):
         #qs = MyOwnModel.objects.filter(id=2)
         qs = MyOwnModel.objects.all()
         return qs
-    queryset = get_queryset(MyOwnModel)
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-
-        serializer = MyOwnModelSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = MyOwnModelSerializer(instance)
-        return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-            my_model = MyOwnModel.objects.create(q=request.data["q"],
-                        a=request.data["a"], user=request.user)
-            serializer = MyOwnModelSerializer(my_model, many=False)
-            return Response(serializer.data)
 
 
-
-    '''def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        instance.q = request.data['q']
-        instance.a = request.data['a']
-        instance.save()
-
-        serializer = MyOwnModelSerializer(instance, many=False)
-        return Response(serializer.data)'''
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        '''if  instance.user == request.user:
-            instance.q = request.data['q']
-            instance.a = request.data['a']
-            instance.save()
-
-            serializer = MyOwnModelSerializer(instance, many=False)
-            return Response(serializer.data)
-        else:
-            return HttpResponseNotAllowed('Not allowed')
-         '''   #return Response(ono)
-
-
-        if  is_authorization(self, request):
-            instance.q = request.data['q']
-            instance.a = request.data['a']
-            instance.save()
-
-            serializer = MyOwnModelSerializer(instance, many=False)
-            return Response(serializer.data)
-        else:
-            return HttpResponseNotAllowed('Not allowed')
-            #return Response(ono)
-
-
-
-
-
-
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-        return Response('Record deleted')
 
 
 
 def is_authorization(self, request):
     instance = self.get_object()
     return instance.user == request.user
+
+'''

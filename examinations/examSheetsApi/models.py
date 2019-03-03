@@ -33,9 +33,3 @@ class Answer(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
-class MyOwnModel(models.Model):
-    q = models.IntegerField()
-    a = models.TextField(max_length=110)
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)

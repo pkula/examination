@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import (
     Question, Answer, AnswerForm,
-    ExamSheet, MyOwnModel,
+    ExamSheet,
 )
 
 
@@ -19,8 +19,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'name')
 
 
-
-
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
@@ -31,7 +29,6 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ('id', 'answer_content', 'score', 'question_id', 'form_id')
-
 
 
 class AnswerFormSerializer(serializers.ModelSerializer):
@@ -48,12 +45,3 @@ class ExamSheetSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'owner', 'is_published', 'questions', 'answer_forms'
                    )
 
-
-
-class MyOwnModelSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = MyOwnModel
-        fields = ('id', 'q','a', 'user')
-        #read_only_fields = ('a',)
-        #depth = 1
