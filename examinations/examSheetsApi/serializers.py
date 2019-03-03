@@ -24,7 +24,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'question_content', 'sheet_id', 'max_score')
+        fields = ('id', 'question_content', 'sheet_id', 'max_score', 'owner')
 
 
 class AnswerSerializer(serializers.ModelSerializer):

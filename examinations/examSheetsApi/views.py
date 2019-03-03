@@ -45,45 +45,110 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+
+
+
+
+
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    authentication_classes = (TokenAuthentication,)
 
     def get_queryset(self):
         questions = Question.objects.all()
         return questions
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
 
-        #page = self.paginate_queryset(queryset)
-        #if page is not None:
-        #    serializer = self.get_serializer(page, many=True)
-        #    return self.get_paginated_response(serializer.data)
+    '''def create(self, request, *args, **kwargs):
+        question = MyOwnModel.objects.create(
+            #question_content=request.data["question_content"],
+            max_score=request.data["max_score"],
+            #sheet_id=request.data["sheet_id"],
+            #owner=request.user.id,
+            #question_content="gsdaghsdghgds",
+            #max_score=1,
+            sheet_id=1,
+            owner=1,)
+        serializer = QuestionSerializer(my_model, many=False)
+        return Response(serializer.data)
+    '''
 
-        serializer = QuestionMini(queryset, many=True)
+
+
+    def create(self, request, *args, **kwargs):
+        my_dict = request.data
+        my_dict = dict(my_dict)
+        my_dict['owner'] = request.user.pk
+
+        for key in my_dict:
+            if key == 'question_content':
+                my_dict[key] = my_dict[key][0]
+            if key == 'max_score':
+                try:
+                    my_dict[key] = int(my_dict[key][0])
+                except:
+                    my_dict[key] = my_dict[key][0]
+            if key == 'sheet_id':
+                try:
+                    my_dict[key] = int(my_dict[key][0])
+                except:
+                    my_dict[key] = my_dict[key][0]
+
+
+        serializer = self.get_serializer(data=my_dict, )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = QuestionSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = QuestionMini(instance)
+        serializer = QuestionSerializer(instance)
         return Response(serializer.data)
-
-
-
-
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+    authentication_classes = (TokenAuthentication,)
+
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        serializer = AnswerSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = AnswerSerializer(instance)
+        return Response(serializer.data)
 
 
 class ExamSheetViewSet(viewsets.ModelViewSet):
     queryset = ExamSheet.objects.all()
     serializer_class = ExamSheetSerializer
+    authentication_classes = (TokenAuthentication,)
 
     @action(detail=True)
     def publish(self, request, **kwargs):
@@ -104,11 +169,35 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        serializer = ExamSheetSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = ExamSheetSerializer(instance)
+        return Response(serializer.data)
+
+
 class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        serializer = AnswerFormSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = AnswerFormSerializer(instance)
+        return Response(serializer.data)
 
 
 class MyOwnModelViewSet(viewsets.ModelViewSet):
@@ -158,7 +247,19 @@ class MyOwnModelViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        if  instance.user == request.user:
+        '''if  instance.user == request.user:
+            instance.q = request.data['q']
+            instance.a = request.data['a']
+            instance.save()
+
+            serializer = MyOwnModelSerializer(instance, many=False)
+            return Response(serializer.data)
+        else:
+            return HttpResponseNotAllowed('Not allowed')
+         '''   #return Response(ono)
+
+
+        if  is_authorization(self, request):
             instance.q = request.data['q']
             instance.a = request.data['a']
             instance.save()
@@ -169,7 +270,19 @@ class MyOwnModelViewSet(viewsets.ModelViewSet):
             return HttpResponseNotAllowed('Not allowed')
             #return Response(ono)
 
+
+
+
+
+
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.delete()
         return Response('Record deleted')
+
+
+
+def is_authorization(self, request):
+    instance = self.get_object()
+    return instance.user == request.user
