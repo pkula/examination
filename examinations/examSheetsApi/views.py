@@ -58,9 +58,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = QuestionSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response("Choose exam_sheet")
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
