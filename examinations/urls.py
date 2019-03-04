@@ -21,8 +21,8 @@ from rest_framework.authtoken import views
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    #path('api/', include('examinations.examSheetsApi.urls')),
-    path('', include('examinations.examSheetsApi.urls')),
+    path('api/', include('examinations.examSheetsApi.urls')),
+    #path('', include('examinations.examSheetsApi.urls')),
     path('admin/', admin.site.urls),
     path('api-token-auth/', views.obtain_auth_token),
 ]
