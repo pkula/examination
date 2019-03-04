@@ -155,13 +155,14 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
+        queryset = ExamSheet.objects.all()
         title = self.request.query_params.get('title', None)
         if title:
             queryset_title = ExamSheet.objects.filter(title__contains=title)
             serializer = UserExamSheetSerializer(queryset_title, many=True)
             return Response(serializer.data)
         else:
-            serializer = UserExamSheetSerializer(self.queryset, many=True)
+            serializer = UserExamSheetSerializer(queryset, many=True)
             return Response(serializer.data)
 
 
