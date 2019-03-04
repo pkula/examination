@@ -42,6 +42,12 @@ class ExamSheetSerializer(serializers.ModelSerializer):
     answer_forms = AnswerFormSerializer(many=True)
     class Meta:
         model = ExamSheet
-        fields = ('id', 'title', 'owner', 'is_published', 'questions', 'answer_forms'
-                   )
+        fields = ('id', 'title', 'owner', 'is_published', 'questions', 'answer_forms')
+
+
+class UserExamSheetSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    class Meta:
+        model = ExamSheet
+        fields = ('id', 'title', 'questions')
 

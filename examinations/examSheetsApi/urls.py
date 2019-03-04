@@ -11,7 +11,7 @@ router.register(r'questions', views.QuestionViewSet)
 router.register(r'answers', views.AnswerViewSet)
 router.register(r'exam_sheets', views.ExamSheetViewSet)
 router.register(r'answer_forms', views.AnswerFormViewSet)
-router.register(r'my_own_models', views.MyOwnModelViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls)),
