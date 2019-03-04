@@ -6,7 +6,6 @@ from .models import (
 )
 
 
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -50,4 +49,3 @@ class UserExamSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamSheet
         fields = ('id', 'title', 'questions')
-

@@ -37,10 +37,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-###########################################################################################################
-
-
-
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -57,7 +53,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
             sheet_id=ExamSheet.objects.get(id=int(request.data['sheet_id'])),
             question_content=request.data['question_content'],
             max_score=request.data['max_score'],
-                    owner=request.user)
+            owner=request.user, )
         serializer = QuestionSerializer(form, many=False)
         return Response(serializer.data)
 
@@ -101,7 +97,7 @@ class AnswerViewSet(viewsets.ModelViewSet):
             question_id=Question.objects.get(id=int(request.data['question_id'])),
             form_id=AnswerForm.objects.get(id=int(request.data['form_id'])),
             answer_content=request.data['answer_content'],
-                    user=request.user)
+            user=request.user, )
         serializer = AnswerSerializer(form, many=False)
         return Response(serializer.data)
 
@@ -151,7 +147,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         exam = ExamSheet.objects.create(
             is_published=False,
             title=request.data['title'],
-                    owner=request.user)
+            owner=request.user)
         serializer = ExamSheetSerializer(exam, many=False)
         return Response(serializer.data)
 
@@ -187,8 +183,6 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             return Response('Record deleted')
         else:
             Response("You're not allowed")
-
-
 
     @action(detail=True)
     def publish(self, request, **kwargs):
@@ -257,6 +251,6 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
         else:
             Response("Not allow")
 
-def is_authorization(self, request, name):
-    instance = self.get_object()
-    return instance.user == request.user
+#def is_authorization(self, request, ):
+#    instance = self.get_object()
+#    return instance.user == request.user
