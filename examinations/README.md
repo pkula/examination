@@ -81,6 +81,41 @@ answer_content(str), question_id(int), form_id(int)
 
 ##You can get all your exam sheet with questions
 
-###Call: GET 127.0.0.1:8000/api/exam_sheet/my
+###Call: GET 127.0.0.1:8000/api/exam_sheet/my/
+
+
+##You can get one exam sheet with questions
+
+###Call: GET 127.0.0.1:8000/api/exam_sheet/id/
+
+
+
+##You can search exam sheet for title
+
+###Call: GET 127.0.0.1:8000/api/exam_sheets?title=phrase
+
+
+
+
+
+#############################################################################
+
+
+##You can get all your answer sheet with answers
+
+###Call: GET 127.0.0.1:8000/api/answer_forms/my
+
+
+
+##Owner exam sheet could get a answer form :
+
+###Call: GET 127.0.0.1:8000/api/answer_forms/id/
+
+
+###########################################################################
+
+##You can get one question:
+
+###Call: GET 127.0.0.1:8000/api/questions/id/
 
 
