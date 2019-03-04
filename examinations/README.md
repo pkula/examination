@@ -117,5 +117,29 @@ answer_content(str), question_id(int), form_id(int)
 ##You can get one question:
 
 ###Call: GET 127.0.0.1:8000/api/questions/id/
+ If you creator you get all field , else you get not all field
+
+
+##########################################################################
+
+##Sheet owner can change question:
+
+###Call: PUT 127.0.0.1:8000/api/questions/id/
+
+
+
+##Sheet owner can delete question:
+
+###Call: DELETE 127.0.0.1:8000/api/questions/id/
+
+
+#########################################################################
+
+
+
+##Sheet owner can change title exam sheet:
+
+###Call: PUT 127.0.0.1:8000/api/exam_sheets/id/
+Required parameters: title(str)
 
 
