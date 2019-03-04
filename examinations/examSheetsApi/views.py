@@ -117,7 +117,6 @@ class AnswerViewSet(viewsets.ModelViewSet):
         return Response("You can't change youre answer")
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
         question = self.get_object().question_id
         if question.owner == request.user:
             instance = self.get_object()
@@ -242,7 +241,6 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
         return Response("You can't update your answer")
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
         exam = self.get_object().exam_sheet_id
         if exam.owner == request.user:
             instance = self.get_object()
@@ -253,7 +251,6 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
 
     @action(detail=True,  methods=['post'])
     def mark(self, request, **kwargs):
-        instance = self.get_object()
         exam = self.get_object().exam_sheet_id
         if exam.owner == request.user:
             ans = self.get_object()
