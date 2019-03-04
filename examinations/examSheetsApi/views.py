@@ -145,6 +145,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     serializer_class = ExamSheetSerializer
     authentication_classes = (TokenAuthentication,)
 
+
     def create(self, request, *args, **kwargs):
         exam = ExamSheet.objects.create(
             is_published=False,
@@ -154,9 +155,16 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = UserExamSheetSerializer(queryset, many=True)
-        return Response(serializer.data)
+        title = self.request.query_params.get('title', None)
+        if title:
+            queryset_title = ExamSheet.objects.filter(title__contains=title)
+            serializer = UserExamSheetSerializer(queryset_title, many=True)
+            return Response(serializer.data)
+        else:
+            serializer = UserExamSheetSerializer(self.queryset, many=True)
+            return Response(serializer.data)
+
+
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
