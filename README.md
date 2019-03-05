@@ -2,6 +2,10 @@
 
 This project was created for the company skygate as a job intership
 
+* I tested api in postman
+* I use venv
+
+
 
 ## Table of contents
 * [General info](#general-info)
@@ -9,6 +13,7 @@ This project was created for the company skygate as a job intership
 * [External libraries](#external-libraries)
 * [Guide](#guide)
 * [Add data](#add-data)
+* [Publish and unpublish exam sheet](#publish-and-unpublish-exam-sheet)
 * [Get data (exam_sheet)](#get-data_answer)
 * [Get data (answer_forms)](#get-data-questions-sheet)
 * [Get data (question)](#get-data-questions)
@@ -44,7 +49,7 @@ I decide to use a default Django SQL: SQLite so first You must write in console
 
 ## External libraries
 
-* rest
+* django rest framework
 
 
 
@@ -56,14 +61,11 @@ I decide to use a default Django SQL: SQLite so first You must write in console
 
 Authentication
 Every API command sent needs authentication, which is obtained by sending HTTP headers:
-
+- Key:Authorization,
+- Value:Token 6587fd9ca7d7403b2a8f40a92b5f28d9e620f064
 
 * Getting a token
 You can get a token:
-
-* Key:Authorization,
-* Value:Token 6587fd9ca7d7403b2a8f40a92b5f28d9e620f064
-
 '''
 Call: POST 127.0.0.1:8000/api-token-auth/
 '''
@@ -71,26 +73,22 @@ Required parameters:
 - username(str),
 - password(str)
 
+
 ## Add data
 
-
 * Creating a new exam sheet
-
 '''
 Call: POST 127.0.0.1:8000/api/exam_sheet/
 '''
-
 Required parameters:
 - title(str)
 
 
 * Add question to exam sheet
-You can create and add questions to the exam sheet
-
+If you are owner - you can create and add questions to the exam sheet
 '''
 Call: POST 127.0.0.1:8000/api/exam_sheet/
 '''
-
 Required parameters:
 - sheet_id(int), 
 - question_content(str), 
@@ -100,71 +98,68 @@ Required parameters:
 
 * Creating a new answer sheet
 You can create answer sheet
-
 '''
 Call: POST 127.0.0.1:8000/api/answer_forms/
 '''
-
 Required parameters:
 - exam_sheet_id(int)
 
 
-
 * Add answer
 You can create and add answers to the answer sheet
-
 '''
 Call: POST 127.0.0.1:8000/api/exam_sheet/
 '''
-
 Required parameters:
 - answer_content(str), 
 - question_id(int), 
 - form_id(int)
 
+## Publish and unpublish exam sheet
 
+* Publish exam sheet
+You can publish your exam sheet
+'''
+Call: GET 127.0.0.1:8000/api/exam_sheets/id/publish/
+'''
 
+* Unpublish exam sheet
+You can unpublish your exam sheet
+'''
+Call: GET 127.0.0.1:8000/api/exam_sheets/id/unpublish/
+'''
 
 ## Get data (exam_sheet)
 
 * You can get all exam sheet with questions
-
 '''
 Call: GET 127.0.0.1:8000/api/exam_sheet/
 '''
 
 * You can get all your exam sheet with questions
-
 '''
 Call: GET 127.0.0.1:8000/api/exam_sheet/my/
 '''
 
 * You can get one exam sheet with questions
-
 '''
 Call: GET 127.0.0.1:8000/api/exam_sheet/id/
 '''
 
 * You can search exam sheet for title
-
 '''
 Call: GET 127.0.0.1:8000/api/exam_sheets?title=phrase
 '''
 
 
-
-
 ## Get data (answer_forms)
 
-
 * You can get all your answer sheet with answers
-
 '''
 Call: GET 127.0.0.1:8000/api/answer_forms/my
 '''
 
 * Owner exam sheet could get a answer form :
-
 '''
 Call: GET 127.0.0.1:8000/api/answer_forms/id/
 '''
@@ -172,12 +167,10 @@ Call: GET 127.0.0.1:8000/api/answer_forms/id/
 ## Get data (question)
 
 * You can get one question:
-
 '''
 Call: GET 127.0.0.1:8000/api/questions/id/
 '''
  If you creator you get all field , else you get not all field
-
 
 ## Change and delete question
 
@@ -194,7 +187,6 @@ Call: DELETE 127.0.0.1:8000/api/questions/id/
 ## Modify sheet title
 
 
-
 * Sheet owner can change title exam sheet:
 '''
 Call: PUT 127.0.0.1:8000/api/exam_sheets/id/
@@ -204,5 +196,5 @@ Required parameters:
 
 ## Author
 
-Przemyslaw Kula
-https://github.com/pkula
+* Przemyslaw Kula
+* https://github.com/pkula
