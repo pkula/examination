@@ -1,4 +1,4 @@
-# python_internship
+# python_API
 
 This project was created for the company skygate
 
