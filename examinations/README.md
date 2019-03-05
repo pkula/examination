@@ -6,10 +6,20 @@ This project was created for the company skygate as a job intership
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
-* External libraries
-* [Setup](#setup)
-* [Features](#features)
+* [External libraries](#external-libraries)
+* [Guide](#guide)
+* [Add data](#add-data)
+* [Get data (exam_sheet)](#get-data_answer)
+* [Get data (answer_forms)](#get-data-questions-sheet)
+* [Get data (question)](#get-data-questions)
+* [Change and delete question](#change-and-delete-question)
+* [Modify sheet title](#modify-sheet-title)
 * [Author](#author)
+
+
+
+
+
 
 ## General info
 My API was created based on REST patterns. Communication is based on sending HTTP 
