@@ -1,6 +1,6 @@
 # python_internship
 
-This project was created for the company skygate as a job intership
+This project was created for the company skygate
 
 * I tested api in postman
 * I use venv
