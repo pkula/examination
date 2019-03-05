@@ -61,9 +61,9 @@ Every API command sent needs authentication, which is obtained by sending HTTP h
 
 * Getting a token
 You can get a token:
-'''
-$Call: POST 127.0.0.1:8000/api-token-auth/
-'''
+```
+Call: POST 127.0.0.1:8000/api-token-auth/
+```
 Required parameters:
 - username(str),
 - password(str)
@@ -73,9 +73,9 @@ Required parameters:
 
 * Creating a new exam sheet
 
-'''
-$Call: POST 127.0.0.1:8000/api/exam_sheet/
-'''
+```
+Call: POST 127.0.0.1:8000/api/exam_sheet/
+```
 
 Required parameters:
 - title(str)
@@ -85,9 +85,9 @@ Required parameters:
 
 If you are owner - you can create and add questions to the exam sheet
 
-'''
+```
 Call: POST 127.0.0.1:8000/api/exam_sheet/
-'''
+```
 
 Required parameters:
 - sheet_id(int), 
@@ -100,9 +100,9 @@ Required parameters:
 
 You can create answer sheet
 
-'''
+```
 Call: POST 127.0.0.1:8000/api/answer_forms/
-'''
+```
 
 Required parameters:
 - exam_sheet_id(int)
@@ -112,9 +112,9 @@ Required parameters:
 
 You can create and add answers to the answer sheet
 
-'''
+```
 Call: POST 127.0.0.1:8000/api/exam_sheet/
-'''
+```
 
 Required parameters:
 - answer_content(str), 
@@ -127,66 +127,64 @@ Required parameters:
 
 You can publish your exam sheet
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/exam_sheets/id/publish/
-'''
+```
 
 * Unpublish exam sheet
 
 You can unpublish your exam sheet
-
-'''
+```
 Call: GET 127.0.0.1:8000/api/exam_sheets/id/unpublish/
-'''
+```
 
 ## Get data (exam_sheet)
 
 * You can get all exam sheet with questions
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/exam_sheet/
-'''
+```
 
 * You can get all your exam sheet with questions
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/exam_sheet/my/
-'''
+```
 
 * You can get one exam sheet with questions
-
-'''
+```
 Call: GET 127.0.0.1:8000/api/exam_sheet/id/
-'''
+```
 
 * You can search exam sheet for title
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/exam_sheets?title=phrase
-'''
+```
 
 
 ## Get data (answer_forms)
 
 * You can get all your answer sheet with answers
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/answer_forms/my
-'''
+```
 
 * Owner exam sheet could get a answer form :
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/answer_forms/id/
-'''
+```
 
 ## Get data (question)
 
 * You can get one question:
 
-'''
+```
 Call: GET 127.0.0.1:8000/api/questions/id/
-'''
+```
 
  If you creator you get all field , else you get not all field
 
@@ -194,24 +192,24 @@ Call: GET 127.0.0.1:8000/api/questions/id/
 
 * Sheet owner can change question:
 
-'''
+```
 Call: PUT 127.0.0.1:8000/api/questions/id/
-'''
+```
 
 * Sheet owner can delete question:
 
-'''
+```
 Call: DELETE 127.0.0.1:8000/api/questions/id/
-'''
+```
 
 ## Modify sheet title
 
 
 * Sheet owner can change title exam sheet:
 
-'''
+```
 Call: PUT 127.0.0.1:8000/api/exam_sheets/id/
-'''
+```
 
 Required parameters:  
 - title(str)
