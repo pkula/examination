@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'examinations.examSheetsApi',
     'rest_framework.authtoken',
-    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
