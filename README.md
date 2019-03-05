@@ -62,7 +62,7 @@ Every API command sent needs authentication, which is obtained by sending HTTP h
 * Getting a token
 You can get a token:
 '''
-Call: POST 127.0.0.1:8000/api-token-auth/
+$Call: POST 127.0.0.1:8000/api-token-auth/
 '''
 Required parameters:
 - username(str),
@@ -74,7 +74,7 @@ Required parameters:
 * Creating a new exam sheet
 
 '''
-Call: POST 127.0.0.1:8000/api/exam_sheet/
+$Call: POST 127.0.0.1:8000/api/exam_sheet/
 '''
 
 Required parameters:
