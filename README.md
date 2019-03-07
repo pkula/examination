@@ -6,6 +6,37 @@ This project was created for the company skygate
 * I use venv
 
 
+# Launch
+
+To launch a project you have to do a few steps:
+* Install python3 in you computer
+* Go to the project folder and launch terminal
+* Install python packages
+
+```
+$pip3 install -r requirements.txt
+```
+
+* Make migrations
+
+```
+$python3 manage.py makemigrations
+$python3 manage.py migrate
+```
+
+* Create user:
+
+```
+$python3 manage.py createsuperuser
+```
+
+* Launch a server
+
+```
+$python3 manage.py runserver
+```
+* Now you can use a api. You can send response from your browser, postman or another way. Communication is based on sending HTTP 
+commands to http://127.0.0.1:8000/
 
 ## Table of contents
 * [General info](#general-info)
