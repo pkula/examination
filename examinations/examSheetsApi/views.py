@@ -1,3 +1,4 @@
+from .authorization import QuestionSheetPermission, QuestionPermission
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
@@ -43,12 +44,16 @@ class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     authentication_classes = (TokenAuthentication,)
+    permission_classes = (QuestionPermission,)
 
     def get_queryset(self):
         questions = Question.objects.all()
         return questions
 
     def create(self, request, *args, **kwargs):
+        sheet_id = ExamSheet.objects.get(id=int(request.data['sheet_id']))
+        if sheet_id.owner != request.user:
+            return Response("You can't create question within not yours sheet exam")
         form = Question.objects.create(
             sheet_id=ExamSheet.objects.get(id=int(request.data['sheet_id'])),
             question_content=request.data['question_content'],
@@ -59,11 +64,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         return Response("Choose exam_sheet")
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = QuestionSerializer(instance)
-        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -76,6 +76,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
         else:
             Response("You're not allowed")
 
+
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.owner == request.user:
@@ -84,6 +86,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
             return Response('Record deleted')
         else:
             Response("You're not allowed")
+
+
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
@@ -142,6 +146,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     queryset = ExamSheet.objects.all()
     serializer_class = ExamSheetSerializer
     authentication_classes = (TokenAuthentication,)
+    permission_classes = (QuestionSheetPermission,)
 
 
     def create(self, request, *args, **kwargs):
@@ -151,7 +156,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             owner=request.user)
         serializer = ExamSheetSerializer(exam, many=False)
         return Response(serializer.data)
-
+    '''
     def list(self, request, *args, **kwargs):
         queryset = ExamSheet.objects.all()
         title = self.request.query_params.get('title', None)
@@ -173,6 +178,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         else:
             serializer = UserExamSheetSerializer(instance)
             return Response(serializer.data)
+    '''
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -183,7 +189,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             Response("You're not allowed")
-
+    '''
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.owner == request.user:
@@ -192,7 +198,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             return Response('Record deleted')
         else:
             Response("You're not allowed")
-
+    '''
     @action(detail=True)
     def publish(self, request, **kwargs):
         exam = self.get_object()
@@ -224,7 +230,7 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
     authentication_classes = (TokenAuthentication, )
-
+    '''
     def create(self, request, *args, **kwargs):
         form = AnswerForm.objects.create(
             exam_sheet_id=ExamSheet.objects.get(id=int(request.data['exam_sheet_id'])),
@@ -255,7 +261,7 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
             return Response('Record deleted')
         else:
             Response("You're not allowed")
-
+    '''
     @action(detail=True,  methods=['post'])
     def mark(self, request, **kwargs):
         exam = self.get_object().exam_sheet_id
