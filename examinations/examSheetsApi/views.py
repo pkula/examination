@@ -84,8 +84,10 @@ class AnswerViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         question_id = Question.objects.get(id=int(request.data['question_id']))
         form_id = AnswerForm.objects.get(id=int(request.data['form_id']))
+        if form_id.exam_sheet_id != question_id.sheet_id:
+            return Response("You can't add answer to question in not your exam sheet")
         if form_id.user != request.user:
-            return Response("You can add answer within not your form")
+            return Response("You can not add answer within not your form")
         form = Answer.objects.create(
             question_id=question_id,
             form_id=form_id,
