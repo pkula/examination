@@ -100,6 +100,16 @@ Required parameters:
 - password(str)
 
 
+
+
+
+
+
+
+
+
+
+
 ## Add data
 
 #### Creating a new exam sheet
@@ -112,12 +122,13 @@ Required parameters:
 - title(str)
 
 
+
 #### Add question to exam sheet
 
 If you are owner - you can create and add questions to the exam sheet
 
 ```
-Call: POST 127.0.0.1:8000/api/exam_sheet/
+Call: POST 127.0.0.1:8000/api/questions/
 ```
 
 Required parameters:
@@ -144,7 +155,7 @@ Required parameters:
 You can create and add answers to the answer sheet
 
 ```
-Call: POST 127.0.0.1:8000/api/exam_sheet/
+Call: POST 127.0.0.1:8000/api/answers/
 ```
 
 Required parameters:
@@ -152,24 +163,18 @@ Required parameters:
 - question_id(int), 
 - form_id(int)
 
-## Publish and unpublish exam sheet
 
-#### Publish exam sheet
 
-You can publish your exam sheet
 
-```
-Call: GET 127.0.0.1:8000/api/exam_sheets/id/publish/
-```
 
-#### Unpublish exam sheet
 
-You can unpublish your exam sheet
-```
-Call: GET 127.0.0.1:8000/api/exam_sheets/id/unpublish/
-```
 
-## Get data (exam_sheet)
+
+
+
+## Get data
+
+### Get data (exam_sheet)
 
 #### You can get all exam sheet with questions
 
@@ -195,7 +200,9 @@ Call: GET 127.0.0.1:8000/api/exam_sheets?title=phrase
 ```
 
 
-## Get data (answer_forms)
+
+
+### Get data (answer_forms)
 
 #### You can get all your answer sheet with answers
 
@@ -209,7 +216,9 @@ Call: GET 127.0.0.1:8000/api/answer_forms/my
 Call: GET 127.0.0.1:8000/api/answer_forms/id/
 ```
 
-## Get data (question)
+
+
+### Get data (question)
 
 #### You can get one question:
 
@@ -217,9 +226,62 @@ Call: GET 127.0.0.1:8000/api/answer_forms/id/
 Call: GET 127.0.0.1:8000/api/questions/id/
 ```
 
- If you creator you get all field , else you get not all field
 
-## Change and delete question
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Publish and unpublish exam sheet
+
+#### Publish exam sheet
+
+You can publish your exam sheet
+
+```
+Call: GET 127.0.0.1:8000/api/exam_sheets/id/publish/
+```
+
+#### Unpublish exam sheet
+
+You can unpublish your exam sheet
+```
+Call: GET 127.0.0.1:8000/api/exam_sheets/id/unpublish/
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Change and delete
 
 #### Sheet owner can change question:
 
@@ -244,6 +306,16 @@ Call: PUT 127.0.0.1:8000/api/exam_sheets/id/
 
 Required parameters:  
 - title(str)
+
+
+
+
+
+
+
+
+
+
 
 ## Author
 
