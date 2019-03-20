@@ -1,4 +1,4 @@
-from .authorization import QuestionSheetPermission, QuestionPermission
+from .authorization import QuestionSheetPermission, QuestionPermission, AnswerFormPermission, AnswerPermission
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
@@ -93,6 +93,7 @@ class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
     authentication_classes = (TokenAuthentication,)
+    permission_classes = (AnswerPermission,)
 
     def create(self, request, *args, **kwargs):
         form = Answer.objects.create(
@@ -230,7 +231,8 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
     queryset = AnswerForm.objects.all()
     serializer_class = AnswerFormSerializer
     authentication_classes = (TokenAuthentication, )
-    '''
+    permission_classes = (AnswerFormPermission,)
+
     def create(self, request, *args, **kwargs):
         form = AnswerForm.objects.create(
             exam_sheet_id=ExamSheet.objects.get(id=int(request.data['exam_sheet_id'])),
@@ -250,8 +252,6 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
         else:
             Response("You're not allowed")
 
-    def update(self, request, *args, **kwargs):
-        return Response("You can't update your answer")
 
     def destroy(self, request, *args, **kwargs):
         exam = self.get_object().exam_sheet_id
@@ -261,7 +261,8 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
             return Response('Record deleted')
         else:
             Response("You're not allowed")
-    '''
+
+
     @action(detail=True,  methods=['post'])
     def mark(self, request, **kwargs):
         exam = self.get_object().exam_sheet_id

@@ -33,7 +33,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class AnswerFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerForm
-        fields = ('id', 'exam_sheet_id', 'answers', 'mark')
+        fields = ('id', 'exam_sheet_id', 'user', 'answers', 'mark')
 
 
 class ExamSheetSerializer(serializers.ModelSerializer):
