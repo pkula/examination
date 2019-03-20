@@ -74,17 +74,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-    '''
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.owner == request.user:
-            instance = self.get_object()
-            instance.delete()
-            return Response('Record deleted')
-        else:
-            Response("You're not allowed")
-
-    '''
 
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
@@ -93,38 +82,22 @@ class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (AnswerPermission,)
 
     def create(self, request, *args, **kwargs):
+        question_id = Question.objects.get(id=int(request.data['question_id']))
+        form_id = AnswerForm.objects.get(id=int(request.data['form_id']))
+        if form_id.user != request.user:
+            return Response("You can add answer within not your form")
         form = Answer.objects.create(
-            question_id=Question.objects.get(id=int(request.data['question_id'])),
-            form_id=AnswerForm.objects.get(id=int(request.data['form_id'])),
+            question_id=question_id,
+            form_id=form_id,
             answer_content=request.data['answer_content'],
             user=request.user, )
         serializer = AnswerSerializer(form, many=False)
         return Response(serializer.data)
 
+
     def list(self, request, *args, **kwargs):
         return Response("Choose your answer sheet")
-    '''
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        question = self.get_object().question_id
-        if question.owner == request.user or instance.user == request.user:
-            serializer = AnswerSerializer(instance)
-            return Response(serializer.data)
-        else:
-            Response("You're not allowed")
 
-    def update(self, request, *args, **kwargs):
-        return Response("You can't change youre answer")
-
-    def destroy(self, request, *args, **kwargs):
-        question = self.get_object().question_id
-        if question.owner == request.user:
-            instance = self.get_object()
-            instance.delete()
-            return Response('Record deleted')
-        else:
-            Response("You're not allowed")
-    '''
     @action(detail=True,  methods=['post'])
     def mark(self, request, **kwargs):
         ans = self.get_object()
@@ -154,29 +127,6 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             owner=request.user)
         serializer = ExamSheetSerializer(exam, many=False)
         return Response(serializer.data)
-    '''
-    def list(self, request, *args, **kwargs):
-        queryset = ExamSheet.objects.all()
-        title = self.request.query_params.get('title', None)
-        if title:
-            queryset_title = ExamSheet.objects.filter(title__contains=title)
-            serializer = UserExamSheetSerializer(queryset_title, many=True)
-            return Response(serializer.data)
-        else:
-            serializer = UserExamSheetSerializer(queryset, many=True)
-            return Response(serializer.data)
-
-
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.owner == request.user:
-            serializer = ExamSheetSerializer(instance)
-            return Response(serializer.data)
-        else:
-            serializer = UserExamSheetSerializer(instance)
-            return Response(serializer.data)
-    '''
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -185,16 +135,7 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         serializer = ExamSheetSerializer(instance, many=False)
         return Response(serializer.data)
 
-    '''
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if instance.owner == request.user:
-            instance = self.get_object()
-            instance.delete()
-            return Response('Record deleted')
-        else:
-            Response("You're not allowed")
-    '''
+
     @action(detail=True)
     def publish(self, request, **kwargs):
         exam = self.get_object()
@@ -237,26 +178,7 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         return Response("You are not allowed")
-    '''
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        exam = self.get_object().exam_sheet_id
-        if exam.owner == request.user:
-            serializer = AnswerFormSerializer(instance)
-            return Response(serializer.data)
-        else:
-            Response("You're not allowed")
 
-
-    def destroy(self, request, *args, **kwargs):
-        exam = self.get_object().exam_sheet_id
-        if exam.owner == request.user:
-            instance = self.get_object()
-            instance.delete()
-            return Response('Record deleted')
-        else:
-            Response("You're not allowed")
-    '''
 
     @action(detail=True,  methods=['post'])
     def mark(self, request, **kwargs):
@@ -278,7 +200,3 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
 
         serializer = AnswerFormSerializer(forms, many=True)
         return Response(serializer.data)
-
-#def is_authorization(self, request, ):
-#    instance = self.get_object()
-#    return instance.user == request.user
