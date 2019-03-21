@@ -70,12 +70,17 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return Response("Choose exam_sheet")
 
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.max_score = request.data['max_score']
-        instance.question_content = request.data['question_content']
-        instance.save()
-        serializer = QuestionSerializer(instance, many=False)
-        return Response(serializer.data)
+        try:
+            instance = self.get_object()
+            if request.data['max_score'] in request.data:
+                instance.max_score = request.data['max_score']
+            if request.data['question_content'] in request.data:
+                instance.question_content = request.data['question_content']
+            instance.save()
+            serializer = QuestionSerializer(instance, many=False)
+            return Response(serializer.data)
+        except MultiValueDictKeyError:
+            return Response("Bad credentials")
 
 
 
@@ -141,11 +146,14 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             return Response("Bad credentials")
 
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.title = request.data['title']
-        instance.save()
-        serializer = ExamSheetSerializer(instance, many=False)
-        return Response(serializer.data)
+        try:
+            instance = self.get_object()
+            instance.title = request.data['title']
+            instance.save()
+            serializer = ExamSheetSerializer(instance, many=False)
+            return Response(serializer.data)
+        except MultiValueDictKeyError:
+            return Response("Give title")
 
 
     @action(detail=True)
