@@ -295,8 +295,6 @@ Call: PUT 127.0.0.1:8000/api/questions/id/
 Call: DELETE 127.0.0.1:8000/api/questions/id/
 ```
 
-## Modify sheet title
-
 
 #### Sheet owner can change title exam sheet:
 
@@ -310,7 +308,7 @@ Required parameters:
 
 
 
-
+No one can change or update answers and answersform. It can be deleted only when creator delete exam sheet or question.
 
 
 
