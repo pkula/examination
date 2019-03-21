@@ -5,6 +5,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
+from django.utils.datastructures import MultiValueDictKeyError
 
 from django.http.response import HttpResponseNotAllowed
 
@@ -51,16 +52,19 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return questions
 
     def create(self, request, *args, **kwargs):
-        sheet_id = ExamSheet.objects.get(id=int(request.data['sheet_id']))
-        if sheet_id.owner != request.user:
-            return Response("You can't create question within not yours sheet exam")
-        form = Question.objects.create(
-            sheet_id=ExamSheet.objects.get(id=int(request.data['sheet_id'])),
-            question_content=request.data['question_content'],
-            max_score=request.data['max_score'],
-            owner=request.user, )
-        serializer = QuestionSerializer(form, many=False)
-        return Response(serializer.data)
+        try:
+            sheet_id = ExamSheet.objects.get(id=int(request.data['sheet_id']))
+            if sheet_id.owner != request.user:
+                return Response("You can't create question within not yours sheet exam")
+            form = Question.objects.create(
+                sheet_id=ExamSheet.objects.get(id=int(request.data['sheet_id'])),
+                question_content=request.data['question_content'],
+                max_score=request.data['max_score'],
+                owner=request.user, )
+            serializer = QuestionSerializer(form, many=False)
+            return Response(serializer.data)
+        except MultiValueDictKeyError:
+            return Response("Bad credentials")
 
     def list(self, request, *args, **kwargs):
         return Response("Choose exam_sheet")
@@ -82,19 +86,22 @@ class AnswerViewSet(viewsets.ModelViewSet):
     permission_classes = (AnswerPermission,)
 
     def create(self, request, *args, **kwargs):
-        question_id = Question.objects.get(id=int(request.data['question_id']))
-        form_id = AnswerForm.objects.get(id=int(request.data['form_id']))
-        if form_id.exam_sheet_id != question_id.sheet_id:
-            return Response("You can't add answer to question in not your exam sheet")
-        if form_id.user != request.user:
-            return Response("You can not add answer within not your form")
-        form = Answer.objects.create(
-            question_id=question_id,
-            form_id=form_id,
-            answer_content=request.data['answer_content'],
-            user=request.user, )
-        serializer = AnswerSerializer(form, many=False)
-        return Response(serializer.data)
+        try:
+            question_id = Question.objects.get(id=int(request.data['question_id']))
+            form_id = AnswerForm.objects.get(id=int(request.data['form_id']))
+            if form_id.exam_sheet_id != question_id.sheet_id:
+                return Response("You can't add answer to question in not your exam sheet")
+            if form_id.user != request.user:
+                return Response("You can not add answer within not your form")
+            form = Answer.objects.create(
+                question_id=question_id,
+                form_id=form_id,
+                answer_content=request.data['answer_content'],
+                user=request.user, )
+            serializer = AnswerSerializer(form, many=False)
+            return Response(serializer.data)
+        except MultiValueDictKeyError:
+            return Response("Bad credentials")
 
 
     def list(self, request, *args, **kwargs):
@@ -123,12 +130,15 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
-        exam = ExamSheet.objects.create(
-            is_published=False,
-            title=request.data['title'],
-            owner=request.user)
-        serializer = ExamSheetSerializer(exam, many=False)
-        return Response(serializer.data)
+        try:
+            exam = ExamSheet.objects.create(
+                is_published=False,
+                title=request.data['title'],
+                owner=request.user)
+            serializer = ExamSheetSerializer(exam, many=False)
+            return Response(serializer.data)
+        except MultiValueDictKeyError:
+            return Response("Bad credentials")
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -141,6 +151,8 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def publish(self, request, **kwargs):
         exam = self.get_object()
+        if request.user != exam.owner:
+            return Response("You're not allowed")
         exam.is_published = True
         exam.save()
 
@@ -150,6 +162,8 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def unpublish(self, request, **kwargs):
         exam = self.get_object()
+        if request.user != exam.owner:
+            return Response("You're not allowed")
         exam.is_published = False
         exam.save()
 
@@ -172,11 +186,14 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
     permission_classes = (AnswerFormPermission,)
 
     def create(self, request, *args, **kwargs):
-        form = AnswerForm.objects.create(
-            exam_sheet_id=ExamSheet.objects.get(id=int(request.data['exam_sheet_id'])),
-            user=request.user)
-        serializer = AnswerFormSerializer(form, many=False)
-        return Response(serializer.data)
+        try:
+            form = AnswerForm.objects.create(
+                exam_sheet_id=ExamSheet.objects.get(id=int(request.data['exam_sheet_id'])),
+                user=request.user)
+            serializer = AnswerFormSerializer(form, many=False)
+            return Response(serializer.data)
+        except MultiValueDictKeyError:
+            return Response("Bad credentials")
 
     def list(self, request, *args, **kwargs):
         return Response("You are not allowed")
