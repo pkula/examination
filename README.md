@@ -115,7 +115,7 @@ Required parameters:
 #### Creating a new exam sheet
 
 ```
-Call: POST 127.0.0.1:8000/api/exam_sheet/
+Call: POST 127.0.0.1:8000/api/exam_sheets/
 ```
 
 Required parameters:
@@ -185,7 +185,7 @@ Call: GET 127.0.0.1:8000/api/exam_sheet/
 #### You can get all your exam sheet with questions
 
 ```
-Call: GET 127.0.0.1:8000/api/exam_sheet/my/
+Call: GET 127.0.0.1:8000/api/exam_sheets/my/
 ```
 
 #### You can get one exam sheet with questions
