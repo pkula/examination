@@ -145,6 +145,20 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
         except MultiValueDictKeyError:
             return Response("Bad credentials")
 
+
+    def list(self, request, *args, **kwargs):
+        queryset = ExamSheet.objects.all()
+        title = self.request.query_params.get('title', None)
+        if title:
+            queryset_title = ExamSheet.objects.filter(title__contains=title)
+            serializer = UserExamSheetSerializer(queryset_title, many=True)
+            return Response(serializer.data)
+        else:
+            serializer = UserExamSheetSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+
+
     def update(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
