@@ -83,7 +83,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
             return Response("Bad credentials")
 
 
-
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
@@ -107,7 +106,6 @@ class AnswerViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except MultiValueDictKeyError:
             return Response("Bad credentials")
-
 
     def list(self, request, *args, **kwargs):
         return Response("Choose your answer sheet")
@@ -133,7 +131,6 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (QuestionSheetPermission,)
 
-
     def create(self, request, *args, **kwargs):
         try:
             exam = ExamSheet.objects.create(
@@ -144,7 +141,6 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except MultiValueDictKeyError:
             return Response("Bad credentials")
-
 
     def list(self, request, *args, **kwargs):
         queryset = ExamSheet.objects.all()
@@ -157,8 +153,6 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             serializer = UserExamSheetSerializer(queryset, many=True)
             return Response(serializer.data)
 
-
-
     def update(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -168,7 +162,6 @@ class ExamSheetViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except MultiValueDictKeyError:
             return Response("Give title")
-
 
     @action(detail=True)
     def publish(self, request, **kwargs):
@@ -219,7 +212,6 @@ class AnswerFormViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         return Response("You are not allowed")
-
 
     @action(detail=True,  methods=['post'])
     def mark(self, request, **kwargs):
